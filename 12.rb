@@ -68,7 +68,7 @@ table = []
 $walked = []
 ans = 0
 
-File.open("./12-test5-input.txt", "r").each_line do |line|
+File.open("./12-input.txt", "r").each_line do |line|
   table << line.chop.chars
   $walked << Array.new(line.chop.length).map{ |e| false }
 end
@@ -90,6 +90,51 @@ def calc_knees(current_walked, height, width)
         current_walked[i+1][j+1],
       ]
       ans += 1 if (points - [false]).length == 3
+    end
+  end
+
+  ans
+end
+
+def has_corner(top, left, diagonal)
+  if (!top && !left)
+    # puts "                         yes! case 1"
+    return true
+  end
+  if (top && left && !diagonal)
+    # puts "                         yes! case 2"
+    return true
+  end
+  # puts "                         nope"
+  false
+end
+
+def calc_corners(current_walked, height, width, table)
+  ans = 0
+  (0...height).each do |i|
+    # puts "#{i} of #{height}"
+    (0...width).each do |j|
+      next unless current_walked[i][j]
+
+      top =  i > 0 ? current_walked[i-1][j] : nil
+      top_right =  (i > 0 && j < width - 1) ? current_walked[i-1][j+1] : nil
+      right = j < width - 1 ? current_walked[i][j+1] : nil
+      bottom_right = (i < height - 1 && j < width - 1) ? current_walked[i+1][j+1] : nil
+      bottom =  i < height - 1 ? current_walked[i+1][j] : nil
+      bottom_left = (i < height - 1 && j > 0) ? current_walked[i+1][j-1] : nil
+      left = j > 0 ? current_walked[i][j-1] : nil
+      top_left = (i > 0 && j > 0) ? current_walked[i-1][j-1] : nil
+
+      # puts " ########## top left"
+      ans += 1 if has_corner(top, left, top_left)
+      # puts " ########## right top"
+      ans += 1 if has_corner(right, top, top_right)
+      # puts " ########## bottom right"
+      ans += 1 if has_corner(bottom, right, bottom_right)
+      # puts " ########## left bottom"
+      ans += 1 if has_corner(left, bottom, bottom_left)
+
+      # puts "#{i}-#{j} has #{ans} corners"
     end
   end
 
@@ -124,11 +169,15 @@ end
     next if $walked[i][j]
 
     current_walked = Marshal.load($walked_dump)
+    # puts " --- #{table[i][j]}"
     area = walk(i, j, table, $walked, height, width, table[i][j], current_walked)
-    knees = calc_knees(current_walked, height, width)
-    # puts "#{table[i][j]}: #{area}, #{knees}"
-    rating = 4 + (2 * knees)
-    ans += (area * rating)
+    # current_walked.each do |row|
+    #   puts "#{row.inspect}"
+    # end
+    corners = calc_corners(current_walked, height, width, table)
+    # puts " >>>> #{corners} corners, #{area} area"
+    sides = corners
+    ans += (area * sides)
   end
 end
 
