@@ -58,14 +58,18 @@ def calc_min_tokens(ax, ay, bx, by, x, y)
   a = ((x * by) - (y * bx)) / ((ax * by) - (ay * bx))
   b = ((x * ay) - (y * ax)) / ((ax * by) - (ay * bx))
 
-  puts "#{a} #{b}"
+  # puts " #{ax} #{ay} #{bx} #{by} #{x} #{y}"
+  # puts " solution: #{a} #{b}"
+
+  return 0 if (ax * a - bx * b) != x
+  return 0 if (ay * a - by * b) != y
 
   a*3 - b
 end
 
 ans = 0
 
-File.readlines("./13-test-input.txt").each_slice(4) do |slice|
+File.readlines("./13-input.txt").each_slice(4) do |slice|
   ax, ay = scan_numbers(slice[0])
   bx, by = scan_numbers(slice[1])
   result_x, result_y = scan_numbers(slice[2])
@@ -73,7 +77,10 @@ File.readlines("./13-test-input.txt").each_slice(4) do |slice|
   result_y += 10_000_000_000_000
 
   min_tokens = calc_min_tokens(ax, ay, bx, by, result_x, result_y)
-  puts "min tokens: #{min_tokens}"
+  # puts "min tokens: #{min_tokens}"
+
+
+
   ans += min_tokens
 end
 
