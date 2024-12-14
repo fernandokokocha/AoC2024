@@ -34,7 +34,7 @@
 #
 # ans = 0
 #
-# File.readlines("./13-input.txt").each_slice(4) do |slice|
+# File.readlines("./input.txt").each_slice(4) do |slice|
 #   ax, ay = scan_numbers(slice[0])
 #   bx, by = scan_numbers(slice[1])
 #   result_x, result_y = scan_numbers(slice[2])
@@ -69,7 +69,7 @@ end
 
 ans = 0
 
-File.readlines("./13-input.txt").each_slice(4) do |slice|
+File.readlines("./input.txt").each_slice(4) do |slice|
   ax, ay = scan_numbers(slice[0])
   bx, by = scan_numbers(slice[1])
   result_x, result_y = scan_numbers(slice[2])
