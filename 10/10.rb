@@ -69,7 +69,7 @@
 table = []
 $ans = 0
 
-File.open("./10-test-input.txt", "r").each_line do |line|
+File.open("./10-test-2-input.txt", "r").each_line do |line|
   table << line.chop.chars.map(&:to_i)
 end
 

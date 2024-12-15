@@ -2,7 +2,7 @@
 #
 # table = []
 #
-# File.open("./11-test-input.txt", "r").each_line do |line|
+# File.open("./11-test-2-input.txt", "r").each_line do |line|
 #   table = line.chop.split(" ").map(&:to_i)
 # end
 #
