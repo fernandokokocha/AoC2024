@@ -91,11 +91,13 @@
 maze = []
 values = []
 good_spots = []
+possible_values = []
 
-  File.readlines("./test-input.txt").each do |line|
+File.readlines("./test-2-input.txt").each do |line|
   maze << line.chop.split('')
   values << Array.new(line.chop.length).map { |i| -1 }
   good_spots << Array.new(line.chop.length).map { |i| false }
+  possible_values << Array.new(line.chop.length).map { |i| [] }
 end
 
 def find_char(maze, char)
@@ -122,6 +124,7 @@ while queue.any?
   dir = item[2]
   check_value = item[3].to_i
 
+  possible_values[current_i][current_j] << check_value
 
   if values[current_i][current_j] == -1 || check_value <= values[current_i][current_j]
     values[current_i][current_j] = check_value
@@ -168,9 +171,64 @@ values.each do |row|
 end
 
 end_i, end_j = find_char(maze, 'E')
+good_spots[end_i][end_j] = true
+queue2 = ["#{end_i}-#{end_j}-#{values[end_i][end_j]}"]
+while queue2.any?
+  str = queue2.shift
+  item = str.split('-')
+  current_i = item[0].to_i
+  current_j = item[1].to_i
+  value = item[2].to_i
+
+  if !good_spots[current_i - 1][current_j] && values[current_i - 1][current_j] != -1
+    if (values[current_i - 1][current_j] == value - 1)
+      good_spots[current_i - 1][current_j] = true
+      queue2 = ["#{current_i - 1}-#{current_j}-#{value - 1}"]
+    end
+    if (values[current_i - 1][current_j] == value - 1001)
+      good_spots[current_i - 1][current_j] = true
+      queue2 = ["#{current_i - 1}-#{current_j}-#{value - 1001}"]
+    end
+  end
+
+  if !good_spots[current_i + 1][current_j] && values[current_i + 1][current_j] != -1
+    if (values[current_i + 1][current_j] == value - 1)
+      good_spots[current_i + 1][current_j] = true
+      queue2 = ["#{current_i + 1}-#{current_j}-#{value - 1}"]
+    end
+    if (values[current_i + 1][current_j] == value - 1001)
+      good_spots[current_i + 1][current_j] = true
+      queue2 = ["#{current_i + 1}-#{current_j}-#{value - 1001}"]
+    end
+  end
+
+  if !good_spots[current_i][current_j - 1] && values[current_i][current_j - 1] != -1
+    if (values[current_i][current_j - 1] == value - 1)
+      good_spots[current_i][current_j - 1] = true
+      queue2 = ["#{current_i}-#{current_j - 1}-#{value - 1}"]
+    end
+    if (values[current_i][current_j - 1] == value - 1001)
+      good_spots[current_i][current_j - 1] = true
+      queue2 = ["#{current_i}-#{current_j - 1}-#{value - 1001}"]
+    end
+  end
+
+  if !good_spots[current_i][current_j + 1] && values[current_i][current_j + 1] != -1
+    if (values[current_i][current_j + 1] == value - 1)
+      good_spots[current_i][current_j + 1] = true
+      queue2 = ["#{current_i}-#{current_j + 1}-#{value - 1}"]
+    end
+    if (values[current_i][current_j + 1] == value - 1001)
+      good_spots[current_i][current_j + 1] = true
+      queue2 = ["#{current_i}-#{current_j + 1}-#{value - 1001}"]
+    end
+  end
+end
 
 ans = 0
 good_spots.each do |row|
+  puts row.map { |cell| cell.to_s.ljust(6) }.join
+
   row.each do |cell|
     ans += 1 if cell
   end
